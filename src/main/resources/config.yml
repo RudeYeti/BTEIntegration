@@ -9,7 +9,7 @@
 build-team-members: "https://buildtheearth.net/buildteams/0/members"
 
 # Discord Role ID, this should be the exact id of the builder role in the Discord Server.
-# Default value: 000000000000000000
+# Default value: "000000000000000000"
 discord-role-id: "000000000000000000"
 
 # If you want each time a builder is promoted to be logged to the Minecraft Server Console, enable this.
