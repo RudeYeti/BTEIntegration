@@ -1,0 +1,7 @@
+name: BTEIntegration
+version: ${project.version}
+main: io.github.rudeyeti.bteintegration.BTEIntegration
+depend: [DiscordSRV]
+author: Rude Yeti, Incorporated
+load: POSTWORLD
+description: An integration system from BuildTheEarth Discord Servers to their Minecraft Servers.

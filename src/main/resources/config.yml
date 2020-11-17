@@ -1,0 +1,17 @@
+# BTEIntegration plugin created by Rude Yeti, Incorporated.
+# Allows for easy syncing between the BuildTheEarth Website, a Discord Server, and a Minecraft Server.
+# This depends on DiscordSRV, it is a requirement for this plugin to work.
+
+# General Configuration
+
+# Build Team Members webpage on the BuildTheEarth Website, required to fetch the member list.
+# Default value: "https://buildtheearth.net/buildteams/0/members"
+build-team-members: "https://buildtheearth.net/buildteams/0/members"
+
+# Discord Role ID, this should be the exact id of the builder role in the Discord Server.
+# Default value: 000000000000000000
+discord-role-id: "000000000000000000"
+
+# If you want each time a builder is promoted to be logged to the Minecraft Server Console, enable this.
+# Default value: false
+log-role-changes: false
