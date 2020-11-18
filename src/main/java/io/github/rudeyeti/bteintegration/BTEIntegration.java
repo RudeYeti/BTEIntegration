@@ -1,7 +1,11 @@
 package io.github.rudeyeti.bteintegration;
 
 import github.scarsz.discordsrv.DiscordSRV;
+import github.scarsz.discordsrv.dependencies.commons.lang3.ArrayUtils;
+import net.milkbowl.vault.permission.Permission;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
+import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -12,6 +16,7 @@ import java.util.logging.Logger;
 public final class BTEIntegration extends JavaPlugin {
 
     public static Configuration configuration;
+    public static Permission permission;
     public static Logger logger;
     public static String buildTeamMembers;
     public static String roleID;
@@ -19,6 +24,21 @@ public final class BTEIntegration extends JavaPlugin {
     public static String initialBuilders;
     public static int lastPage;
     private final DiscordSRVListener discordSRVListener = new DiscordSRVListener();
+
+    public static Permission getPermissions() {
+        if (permission != null) {
+            return permission;
+        } else {
+            try {
+                Class.forName("net.milkbowl.vault.permission.Permission");
+                RegisteredServiceProvider<Permission> provider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+                return permission = provider.getProvider();
+            } catch (ClassNotFoundException error) {
+                error.printStackTrace();
+                return null;
+            }
+        }
+    }
 
     @Override
     public void onEnable() {
@@ -28,8 +48,8 @@ public final class BTEIntegration extends JavaPlugin {
             }
 
             this.saveDefaultConfig();
-
             configuration = this.getConfig();
+            getPermissions();
             logger = this.getLogger();
             buildTeamMembers = configuration.getString("build-team-members");
             roleID = configuration.getString("discord-role-id");
@@ -40,6 +60,10 @@ public final class BTEIntegration extends JavaPlugin {
                 return;
             } else if (roleID.equals("000000000000000000")) {
                 logger.warning("The discord-role-id value in the configuration must be modified.");
+                getServer().getPluginManager().disablePlugin(this);
+                return;
+            } else if (!ArrayUtils.contains(permission.getGroups(), configuration.getString("minecraft-role-name"))) {
+                logger.warning("The minecraft-role-name value in the configuration was not found.");
                 getServer().getPluginManager().disablePlugin(this);
                 return;
             }

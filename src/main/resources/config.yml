@@ -12,6 +12,10 @@ build-team-members: "https://buildtheearth.net/buildteams/0/members"
 # Default value: "000000000000000000"
 discord-role-id: "000000000000000000"
 
+# Minecraft Role Name, the precise role name of the Minecraft Server's builder role.
+# Default value: "builder"
+minecraft-role-name: "builder"
+
 # If you want each time a builder is promoted to be logged to the Minecraft Server Console, enable this.
 # Default value: false
 log-role-changes: false

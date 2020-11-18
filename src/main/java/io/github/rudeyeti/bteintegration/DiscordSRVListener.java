@@ -8,6 +8,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class DiscordSRVListener {
@@ -28,8 +29,8 @@ public class DiscordSRVListener {
                 BTEIntegration.membersFirstPage = membersFirstPage;
                 BTEIntegration.lastPage = Integer.parseInt(membersFirstPage.select("div.pagination").select("a").last().text());
 
-                for (String guild : DiscordUtil.getJda().getGuildCache().applyStream(guild -> guild.map(Guild::getId).collect(Collectors.toList()))) {
-                    SyncBuilders.sync(DiscordUtil.getJda().getGuildById(guild));
+                for (String guild : Objects.requireNonNull(DiscordUtil.getJda().getGuildCache().applyStream(guild -> guild.map(Guild::getId).collect(Collectors.toList())))) {
+                    SyncBuilders.sync(Objects.requireNonNull(DiscordUtil.getJda().getGuildById(guild)));
                 }
             } catch (IOException error) {
                 error.printStackTrace();
