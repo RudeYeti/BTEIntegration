@@ -4,9 +4,9 @@ main: io.github.rudeyeti.bteintegration.BTEIntegration
 depend: [DiscordSRV, Vault]
 author: Rude Yeti, Incorporated
 load: POSTWORLD
-description: An integration system from BuildTheEarth Discord Servers to their Minecraft Servers.
+description: A simple plugin which allows synchronization from the BuildTheEarth Website to Discord and Minecraft Servers.
 commands:
   bteintegrationreload:
-    description: Your description
+    description: Reloads the BTEIntegration plugin.
     usage: /bteintegrationreload
     permission: bteintegration.reload

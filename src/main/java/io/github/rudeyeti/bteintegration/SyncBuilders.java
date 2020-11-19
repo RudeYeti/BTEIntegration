@@ -75,7 +75,7 @@ public class SyncBuilders {
                     }
                 }
             }
-        } catch (HttpStatusException error) {
+        } catch (HttpStatusException ignored) {
         } catch (IOException error) {
             error.printStackTrace();
         }

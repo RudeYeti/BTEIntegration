@@ -63,7 +63,7 @@ public class DiscordSRVListener {
 
                 SyncBuilders.sync();
             }
-        } catch (HttpStatusException error) {
+        } catch (HttpStatusException ignored) {
         } catch (InterruptedException | IOException error) {
             error.printStackTrace();
         }

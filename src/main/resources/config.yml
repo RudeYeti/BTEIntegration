@@ -1,6 +1,6 @@
 # BTEIntegration plugin created by Rude Yeti, Incorporated.
-# Allows for easy syncing between the BuildTheEarth Website, a Discord Server, and a Minecraft Server.
-# This depends on DiscordSRV, it is a requirement for this plugin to work.
+# A simple plugin which allows synchronization from the BuildTheEarth Website to Discord and Minecraft Servers.
+# This depends on DiscordSRV, Vault, and a permissions plugin. They are a requirement for this plugin to work.
 
 # General Configuration
 
