@@ -5,3 +5,8 @@ depend: [DiscordSRV, Vault]
 author: Rude Yeti, Incorporated
 load: POSTWORLD
 description: An integration system from BuildTheEarth Discord Servers to their Minecraft Servers.
+commands:
+  bteintegrationreload:
+    description: Your description
+    usage: /bteintegrationreload
+    permission: bteintegration.reload

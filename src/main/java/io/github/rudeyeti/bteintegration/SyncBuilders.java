@@ -1,9 +1,7 @@
 package io.github.rudeyeti.bteintegration;
 
 import github.scarsz.discordsrv.DiscordSRV;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
-import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jsoup.Jsoup;
@@ -12,19 +10,13 @@ import org.jsoup.select.Elements;
 
 import java.io.IOException;
 
+import static io.github.rudeyeti.bteintegration.BTEIntegration.*;
+
 public class SyncBuilders {
-    public static void sync(Guild guild) {
+    public static void sync() {
         try {
-            Role role = guild.getRoleById(BTEIntegration.roleID);
-            String group = BTEIntegration.configuration.getString("minecraft-role-name");
-
-            if (role == null) {
-                BTEIntegration.logger.warning("The role with the ID " + BTEIntegration.roleID + " was not found in the Discord Server " + guild.getName() + ".");
-                return;
-            }
-
-            for (int i = 1; i < BTEIntegration.lastPage + 1; i++) {
-                Document membersPage = Jsoup.connect(BTEIntegration.buildTeamMembers + "?page=" + i).userAgent("BTEIntegration").get();
+            for (int i = 1; i < lastPage + 1; i++) {
+                Document membersPage = Jsoup.connect(buildTeamMembers + "?page=" + i).userAgent("BTEIntegration").get();
                 Elements td = membersPage.select("td");
 
                 for (int a = 1; a < td.size(); a += 3) {
@@ -43,12 +35,12 @@ public class SyncBuilders {
                         guild.addRoleToMember(member, role).queue();
                     }
 
-                    if (player != null && !BTEIntegration.permission.playerInGroup(player, group)) {
-                        BTEIntegration.permission.playerAddGroup(player, group);
+                    if (player != null && !getPermissions().playerInGroup(player, group)) {
+                        getPermissions().playerAddGroup(player, group);
                     }
 
-                    if (BTEIntegration.configuration.getBoolean("log-role-changes")) {
-                        BTEIntegration.logger.info("The user " + username + " was promoted to " + role.getName() + " and " + group + ".");
+                    if (configuration.getBoolean("log-role-changes")) {
+                        logger.info("The user " + username + " was promoted to " + role.getName() + " and " + group + ".");
                     }
                 }
             }
