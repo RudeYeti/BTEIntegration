@@ -1,4 +1,4 @@
-package io.github.rudeyeti.bteintegration.eventlisteners;
+package io.github.rudeyeti.bteintegration.listeners;
 
 import github.scarsz.discordsrv.dependencies.jda.api.events.guild.member.GuildMemberJoinEvent;
 import github.scarsz.discordsrv.dependencies.jda.api.hooks.ListenerAdapter;

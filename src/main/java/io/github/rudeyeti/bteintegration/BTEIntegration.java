@@ -3,8 +3,9 @@ package io.github.rudeyeti.bteintegration;
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
+import github.scarsz.discordsrv.dependencies.jda.api.requests.GatewayIntent;
 import io.github.rudeyeti.bteintegration.commands.BTEIntegrationReload;
-import io.github.rudeyeti.bteintegration.eventlisteners.DiscordSRVListener;
+import io.github.rudeyeti.bteintegration.listeners.DiscordSRVListener;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -43,11 +44,9 @@ public final class BTEIntegration extends JavaPlugin {
         if (buildTeamMembers.equals("https://buildtheearth.net/buildteams/0/members")) {
             logger.warning("The build-team-members value in the configuration must be modified from https://buildtheearth.net/buildteams/0/members.");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
-            return;
         } else if (roleID.equals("000000000000000000")) {
             logger.warning("The discord-role-id value in the configuration must be modified from 000000000000000000.");
             plugin.getServer().getPluginManager().disablePlugin(plugin);
-            return;
         }
     }
 
@@ -66,6 +65,7 @@ public final class BTEIntegration extends JavaPlugin {
         logger = this.getLogger();
         roleID = configuration.getString("discord-role-id");
 
+        DiscordSRV.api.requireIntent(GatewayIntent.GUILD_MEMBERS);
         DiscordSRV.api.subscribe(discordSRVListener);
     }
 

@@ -1,4 +1,4 @@
-package io.github.rudeyeti.bteintegration.eventlisteners;
+package io.github.rudeyeti.bteintegration.listeners;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.Subscribe;
@@ -6,6 +6,7 @@ import github.scarsz.discordsrv.api.events.DiscordReadyEvent;
 import github.scarsz.discordsrv.dependencies.commons.lang3.ArrayUtils;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import io.github.rudeyeti.bteintegration.SyncBuilders;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -62,6 +63,7 @@ public class DiscordSRVListener {
 
                 SyncBuilders.sync();
             }
+        } catch (HttpStatusException error) {
         } catch (InterruptedException | IOException error) {
             error.printStackTrace();
         }
