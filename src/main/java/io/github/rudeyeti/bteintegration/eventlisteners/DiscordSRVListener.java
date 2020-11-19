@@ -1,9 +1,11 @@
-package io.github.rudeyeti.bteintegration;
+package io.github.rudeyeti.bteintegration.eventlisteners;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.DiscordReadyEvent;
 import github.scarsz.discordsrv.dependencies.commons.lang3.ArrayUtils;
+import github.scarsz.discordsrv.util.DiscordUtil;
+import io.github.rudeyeti.bteintegration.SyncBuilders;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
@@ -15,6 +17,8 @@ public class DiscordSRVListener {
     @Subscribe
     public void discordReadyEvent(DiscordReadyEvent event) {
         try {
+            DiscordUtil.getJda().addEventListener(new JDAListener());
+
             buildTeamMembers = configuration.getString("build-team-members");
             guild = DiscordSRV.getPlugin().getMainGuild();
             group = configuration.getString("minecraft-role-name");

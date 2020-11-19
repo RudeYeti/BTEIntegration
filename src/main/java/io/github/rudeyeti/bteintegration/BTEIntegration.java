@@ -4,6 +4,7 @@ import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import io.github.rudeyeti.bteintegration.commands.BTEIntegrationReload;
+import io.github.rudeyeti.bteintegration.eventlisteners.DiscordSRVListener;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;

@@ -40,7 +40,12 @@ public class SyncBuilders {
                     }
 
                     if (configuration.getBoolean("log-role-changes")) {
-                        logger.info("The user " + username + " was promoted to " + role.getName() + " and " + group + ".");
+                        String message = "The user " + username + " was promoted to " + role.getName();
+                        if (player != null) {
+                            logger.info(message + " and " + group + ".");
+                        } else {
+                            logger.info(message + ".");
+                        }
                     }
                 }
             }
