@@ -34,21 +34,21 @@ public class SyncBuilders {
                     }
 
                     membersToDemote.remove(member);
-                    boolean hasRole = member.getRoles().contains(role);
                     Player player = Bukkit.getPlayer(DiscordSRV.getPlugin().getAccountLinkManager().getUuid(member.getId()));
-                    boolean inGroup = player != null && !getPermissions().playerInGroup(player, group);
+                    boolean hasRole = member.getRoles().contains(role);
+                    boolean inGroup = player != null && getPermissions().playerInGroup(player, group);
 
                     if (!hasRole) {
                         guild.addRoleToMember(member, role).queue();
                     }
 
-                    if (inGroup) {
+                    if (!inGroup) {
                         getPermissions().playerAddGroup(player, group);
                     }
 
                     if (!hasRole && configuration.getBoolean("log-role-changes")) {
                         String message = "The user " + username + " was promoted to " + role.getName();
-                        if (inGroup) {
+                        if (!inGroup) {
                             logger.info(message + " and " + group + ".");
                         } else {
                             logger.info(message + ".");
@@ -67,7 +67,7 @@ public class SyncBuilders {
                 }
 
                 if (configuration.getBoolean("log-role-changes")) {
-                    String message = "The user " + member.getUser().getName() + "#" + member.getUser().getDiscriminator() + " was demoted from " + role.getName();
+                    String message = "The user " + member.getUser().getAsTag() + " was demoted from " + role.getName();
                     if (inGroup) {
                         logger.info(message + " and " + group + ".");
                     } else {

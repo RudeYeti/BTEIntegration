@@ -6,6 +6,7 @@ import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.api.requests.GatewayIntent;
 import io.github.rudeyeti.bteintegration.commands.BTEIntegrationReload;
 import io.github.rudeyeti.bteintegration.listeners.DiscordSRVListener;
+import io.github.rudeyeti.bteintegration.listeners.EventListener;
 import net.milkbowl.vault.permission.Permission;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.Configuration;
@@ -58,6 +59,7 @@ public final class BTEIntegration extends JavaPlugin {
 
         this.saveDefaultConfig();
         this.getCommand("bteintegrationreload").setExecutor(new BTEIntegrationReload());
+        getServer().getPluginManager().registerEvents(new EventListener(), this);
         getPermissions();
 
         plugin = getPlugin(this.getClass());

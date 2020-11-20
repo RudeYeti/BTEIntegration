@@ -2,10 +2,12 @@ package io.github.rudeyeti.bteintegration.listeners;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.api.Subscribe;
+import github.scarsz.discordsrv.api.events.AccountLinkedEvent;
 import github.scarsz.discordsrv.api.events.DiscordReadyEvent;
 import github.scarsz.discordsrv.dependencies.commons.lang3.ArrayUtils;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import io.github.rudeyeti.bteintegration.SyncBuilders;
+import org.bukkit.entity.Player;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -66,6 +68,18 @@ public class DiscordSRVListener {
         } catch (HttpStatusException ignored) {
         } catch (InterruptedException | IOException error) {
             error.printStackTrace();
+        }
+    }
+
+    @Subscribe
+    public void accountLinkedEvent(AccountLinkedEvent event) {
+        boolean hasRole = guild.getMemberById(event.getUser().getId()).getRoles().contains(role);
+
+        if (hasRole) {
+            getPermissions().playerAddGroup((Player) event.getPlayer(), group);
+            if (configuration.getBoolean("log-role-changes")) {
+                logger.info("The user " + guild.getMemberById(event.getUser().getId()).getUser().getAsTag() + " was promoted to " + group + ".");
+            }
         }
     }
 }
