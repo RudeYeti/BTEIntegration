@@ -5,12 +5,12 @@
 # General Configuration
 
 # Build Team Members webpage on the BuildTheEarth Website, required to fetch the member list.
-# Default value: "https://buildtheearth.net/buildteams/0/members"
-build-team-members: "https://buildtheearth.net/buildteams/0/members"
+# Default value: "https://buildtheearth.net/buildteams/#/members"
+build-team-members: "https://buildtheearth.net/buildteams/#/members"
 
 # Discord Role ID, this should be the exact id of the builder role in the Discord Server.
-# Default value: "000000000000000000"
-discord-role-id: "000000000000000000"
+# Default value: "##################"
+discord-role-id: "##################"
 
 # Minecraft Role Name, the precise role name of the Minecraft Server's builder role.
 # Default value: "builder"

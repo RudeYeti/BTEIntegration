@@ -22,17 +22,17 @@ public class DiscordSRVListener {
         try {
             DiscordUtil.getJda().addEventListener(new JDAListener());
 
-            buildTeamMembers = configuration.getString("build-team-members");
             guild = DiscordSRV.getPlugin().getMainGuild();
-            group = configuration.getString("minecraft-role-name");
 
             if (guild == null) {
                 logger.warning("Your Discord Bot must be in a Discord Server.");
                 plugin.getServer().getPluginManager().disablePlugin(plugin);
                 return;
+            } else if (!validateConfiguration()) {
+                plugin.getServer().getPluginManager().disablePlugin(plugin);
+                return;
             }
 
-            validateConfiguration();
             role = guild.getRoleById(roleID);
 
             if (role == null) {
