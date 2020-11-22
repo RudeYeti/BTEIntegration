@@ -23,46 +23,53 @@ import java.util.regex.Pattern;
 
 public final class BTEIntegration extends JavaPlugin {
 
+    public static String prefix = "[BTEIntegration] ";
     public static Plugin plugin;
     public static Configuration configuration;
     public static Logger logger;
-    public static String buildTeamMembers;
-    public static List<Member> buildTeamMembersList;
     public static List<Member> initialBuildTeamMembersList;
+    public static Member lastRoleChange;
     public static Guild guild;
-    public static String roleID;
     public static Role role;
-    public static String group;
     public static int lastPage;
 
+    public static String buildTeamMembers;
+    public static String discordRoleId;
+    public static String minecraftRoleName;
+    public static boolean globalRoleChanges;
+    public static boolean logRoleChanges;
+    
     public static Permission getPermissions() {
-        try {
-            Class.forName("net.milkbowl.vault.permission.Permission");
-            RegisteredServiceProvider<Permission> provider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-            return provider.getProvider();
-        } catch (ClassNotFoundException error) {
-            error.printStackTrace();
-            return null;
-        }
+        RegisteredServiceProvider<Permission> provider = Bukkit.getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+        return provider.getProvider();
     }
 
-    public static boolean validateConfiguration() {
+    public static void updateConfiguration() {
         buildTeamMembers = configuration.getString("build-team-members");
-        roleID = configuration.getString("discord-role-id");
-        group = configuration.getString("minecraft-role-name");
+        discordRoleId = configuration.getString("discord-role-id");
+        minecraftRoleName = configuration.getString("minecraft-role-name");
+        globalRoleChanges = configuration.getBoolean("global-role-changes");
+        logRoleChanges = configuration.getBoolean("log-role-changes");
+    }
+    
+    public static boolean validateConfiguration() {
+        updateConfiguration();
 
         if (buildTeamMembers.equals("https://buildtheearth.net/buildteams/#/members")) {
             logger.warning("The build-team-members value in the configuration must be modified from https://buildtheearth.net/buildteams/#/members.");
             return false;
-        } else if (roleID.equals("##################")) {
+        } else if (discordRoleId.equals("##################")) {
             logger.warning("The discord-role-id value in the configuration must be modified from ##################.");
             return false;
         } else if (!Pattern.compile("^https?://(www\\.)?buildtheearth.net/buildteams/\\d+/members$").matcher(buildTeamMembers).matches()) {
             logger.warning("The build-team-members value in the configuration does not match the format https://buildtheearth.net/buildteams/#/members.");
             return false;
+        } else if (!(configuration.get("global-role-changes") instanceof Boolean)) {
+            logger.warning("The global-role-changes value in the configuration must be either true or false.");
+            return false;
         } else if (!(configuration.get("log-role-changes") instanceof Boolean)) {
-        logger.warning("The log-role-changes value in the configuration must be either true or false.");
-        return false;
+            logger.warning("The log-role-changes value in the configuration must be either true or false.");
+            return false;
         }
 
         return true;
@@ -78,14 +85,10 @@ public final class BTEIntegration extends JavaPlugin {
         this.getCommand("bteintegrationreload").setExecutor(new BTEIntegrationReload());
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getPermissions();
-
         plugin = getPlugin(this.getClass());
         logger = this.getLogger();
         configuration = this.getConfig();
-
-        roleID = configuration.getString("discord-role-id");
-        buildTeamMembers = configuration.getString("build-team-members");
-        group = configuration.getString("minecraft-role-name");
+        updateConfiguration();
 
         DiscordSRV.api.requireIntent(GatewayIntent.GUILD_MEMBERS);
         DiscordSRV.api.subscribe(new DiscordSRVListener());

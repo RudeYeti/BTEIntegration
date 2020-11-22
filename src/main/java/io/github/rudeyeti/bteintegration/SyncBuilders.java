@@ -16,8 +16,11 @@ import java.util.List;
 import static io.github.rudeyeti.bteintegration.BTEIntegration.*;
 
 public class SyncBuilders {
+    private static int membersSize;
+
     public synchronized static List<Member> getWebsiteMembersList() {
         List<Member> members = new ArrayList<>();
+        membersSize = 0;
 
         try {
             for (int i = 1; i < lastPage + 1; i++) {
@@ -27,10 +30,17 @@ public class SyncBuilders {
                 for (int a = 1; a < td.size(); a += 3) {
                     String username = td.get(a).text();
                     Member member = guild.getMemberByTag(username);
+                    membersSize++;
+
+                    try {
+                        member.getId();
+                    } catch (NullPointerException error) {
+                        continue;
+                    }
+
                     members.add(member);
                 }
             }
-
         } catch (HttpStatusException ignored) {
         } catch (IOException error) {
             error.printStackTrace();
@@ -39,59 +49,61 @@ public class SyncBuilders {
         return members;
     }
 
-    public synchronized static void addRole(Member member) {
-        Player player = Bukkit.getPlayer(DiscordSRV.getPlugin().getAccountLinkManager().getUuid(member.getId()));
-        boolean hasRole = member.getRoles().contains(role);
-        boolean inGroup = player != null && !getPermissions().playerInGroup(player, group);
-
-        if (!hasRole) {
-            guild.addRoleToMember(member, role).queue();
-        }
-
-        if (inGroup) {
-            getPermissions().playerAddGroup(player, group);
-        }
-
-        if (!hasRole && configuration.getBoolean("log-role-changes")) {
-            String message = "The user " + member.getUser().getAsTag() + " was promoted to " + role.getName();
+    public synchronized static void logRoleChange(Member member, String roleChange, String roleName, boolean inGroup) {
+        if (logRoleChanges) {
+            String message = "The user " + member.getUser().getAsTag() + " was " + roleChange + " " + roleName;
             if (inGroup) {
-                logger.info(message + " and " + group + ".");
+                logger.info(message + " and " + minecraftRoleName + ".");
             } else {
                 logger.info(message + ".");
             }
+        }
+    }
+
+    public synchronized static void addRole(Member member) {
+        Player player = Bukkit.getPlayer(DiscordSRV.getPlugin().getAccountLinkManager().getUuid(member.getId()));
+        boolean hasRole = member.getRoles().contains(role);
+        boolean inGroup = player != null && !getPermissions().playerInGroup(player, minecraftRoleName);
+
+        if (!hasRole) {
+            guild.addRoleToMember(member, role).queue();
+
+            if (inGroup) {
+                getPermissions().playerAddGroup(player, minecraftRoleName);
+            }
+
+            logRoleChange(member, "promoted to", role.getName(), inGroup);
         }
     }
 
     public synchronized static void removeRole(Member member) {
         Player player = Bukkit.getPlayer(DiscordSRV.getPlugin().getAccountLinkManager().getUuid(member.getId()));
-        boolean inGroup = player != null && getPermissions().playerInGroup(player, group);
+        boolean inGroup = player != null && getPermissions().playerInGroup(player, minecraftRoleName);
         guild.removeRoleFromMember(member, role).queue();
 
         if (inGroup) {
-            getPermissions().playerRemoveGroup(player, group);
+            getPermissions().playerRemoveGroup(player, minecraftRoleName);
         }
 
-        if (configuration.getBoolean("log-role-changes")) {
-            String message = "The user " + member.getUser().getAsTag() + " was demoted from " + role.getName();
-            if (inGroup) {
-                logger.info(message + " and " + group + ".");
-            } else {
-                logger.info(message + ".");
-            }
-        }
+        logRoleChange(member, "demoted from", role.getName(), inGroup);
     }
 
     public synchronized static void syncUser() {
-        buildTeamMembersList = getWebsiteMembersList();
-        List<Member> members = buildTeamMembersList;
+        int initialMembersSize = membersSize;
+        List<Member> members = getWebsiteMembersList();
 
-        if (initialBuildTeamMembersList.size() - members.size() > 0) {
+        Member member;
+        if (initialMembersSize - membersSize > 0) {
             initialBuildTeamMembersList.removeAll(members);
-            removeRole(initialBuildTeamMembersList.get(0));
+            member = initialBuildTeamMembersList.get(0);
+            removeRole(member);
         } else {
             members.removeAll(initialBuildTeamMembersList);
-            addRole(members.get(0));
+            member = members.get(0);
+            addRole(member);
         }
+
+        lastRoleChange = member;
     }
 
     public synchronized static void syncAllUsers() {
@@ -99,12 +111,6 @@ public class SyncBuilders {
         List<Member> membersToDemote = guild.getMembersWithRoles(role);
 
         for (Member member : members) {
-            try {
-                member.getId();
-            } catch (NullPointerException error) {
-                return;
-            }
-
             membersToDemote.remove(member);
             addRole(member);
         }
@@ -115,7 +121,7 @@ public class SyncBuilders {
     }
 
     public synchronized static void sync() {
-        if (configuration.getBoolean("global-role-changes")) {
+        if (globalRoleChanges) {
             syncAllUsers();
         } else {
             syncUser();

@@ -5,6 +5,7 @@ import github.scarsz.discordsrv.api.Subscribe;
 import github.scarsz.discordsrv.api.events.AccountLinkedEvent;
 import github.scarsz.discordsrv.api.events.DiscordReadyEvent;
 import github.scarsz.discordsrv.dependencies.commons.lang3.ArrayUtils;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.util.DiscordUtil;
 import io.github.rudeyeti.bteintegration.SyncBuilders;
 import org.bukkit.entity.Player;
@@ -21,8 +22,6 @@ public class DiscordSRVListener {
     public void discordReadyEvent(DiscordReadyEvent event) {
         try {
             DiscordUtil.getJda().addEventListener(new JDAListener());
-
-            String initialBuilders;
             guild = DiscordSRV.getPlugin().getMainGuild();
 
             if (guild == null) {
@@ -34,29 +33,31 @@ public class DiscordSRVListener {
                 return;
             }
 
-            role = guild.getRoleById(roleID);
+            role = guild.getRoleById(discordRoleId);
 
             if (role == null) {
-                logger.warning("The role with the ID " + roleID + " was not found in the Discord Server " + guild.getName() + ".");
+                logger.warning("The role with the ID " + discordRoleId + " was not found in the Discord Server " + guild.getName() + ".");
                 plugin.getServer().getPluginManager().disablePlugin(plugin);
                 return;
-            } else if (!ArrayUtils.contains(getPermissions().getGroups(), group)) {
-                logger.warning("The minecraft-role-name value " + group + "in the configuration was not registered as a group.");
+            } else if (!ArrayUtils.contains(getPermissions().getGroups(), minecraftRoleName)) {
+                logger.warning("The minecraft-role-name value " + minecraftRoleName + "in the configuration was not registered as a group.");
                 plugin.getServer().getPluginManager().disablePlugin(plugin);
                 return;
             }
 
             Document membersFirstPage = Jsoup.connect(buildTeamMembers + "?page=1").userAgent("BTEIntegration").get();
-            initialBuilders = membersFirstPage.select("small").text();
+            String initialBuilders = membersFirstPage.select("small").text();
             lastPage = Integer.parseInt(membersFirstPage.select("div.pagination").select("a").last().text());
-            initialBuildTeamMembersList = SyncBuilders.getWebsiteMembersList();
-            String builders;
+
+            if (!globalRoleChanges) {
+                initialBuildTeamMembersList = SyncBuilders.getWebsiteMembersList();
+            }
 
             while (true) {
                 Thread.sleep(1000);
 
                 membersFirstPage = Jsoup.connect(buildTeamMembers + "?page=1").userAgent("BTEIntegration").get();
-                builders = membersFirstPage.select("small").text();
+                String builders = membersFirstPage.select("small").text();
 
                 if (initialBuilders.equals(builders)) {
                     continue;
@@ -64,7 +65,10 @@ public class DiscordSRVListener {
 
                 SyncBuilders.sync();
 
-                initialBuildTeamMembersList = SyncBuilders.getWebsiteMembersList();
+                if (!globalRoleChanges) {
+                    initialBuildTeamMembersList = SyncBuilders.getWebsiteMembersList();
+                }
+
                 initialBuilders = builders;
                 lastPage = Integer.parseInt(membersFirstPage.select("div.pagination").select("a").last().text());
             }
@@ -76,13 +80,11 @@ public class DiscordSRVListener {
 
     @Subscribe
     public void accountLinkedEvent(AccountLinkedEvent event) {
-        boolean hasRole = guild.getMemberById(event.getUser().getId()).getRoles().contains(role);
+        Member member = guild.getMember(event.getUser());
 
-        if (hasRole) {
-            getPermissions().playerAddGroup((Player) event.getPlayer(), group);
-            if (configuration.getBoolean("log-role-changes")) {
-                logger.info("The user " + guild.getMemberById(event.getUser().getId()).getUser().getAsTag() + " was promoted to " + group + ".");
-            }
+        if (member.getRoles().contains(role)) {
+            getPermissions().playerAddGroup((Player) event.getPlayer(), minecraftRoleName);
+            SyncBuilders.logRoleChange(member, "promoted to", minecraftRoleName, false);
         }
     }
 }

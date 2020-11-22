@@ -17,13 +17,14 @@ public class BTEIntegrationReload implements CommandExecutor {
 
             if (!validateConfiguration()) {
                 configuration = oldConfiguration;
-                sender.sendMessage("[BTEIntegration] The configuration was invalid, reverting back to the previous state.");
+                updateConfiguration();
+                sender.sendMessage(prefix + "The configuration was invalid, reverting back to the previous state.");
             } else {
-                sender.sendMessage("[BTEIntegration] The plugin has been successfully reloaded.");
+                sender.sendMessage(prefix + "The plugin has been successfully reloaded.");
             }
             return true;
         }
-        sender.sendMessage("[BTEIntegration] You are missing the correct permission to perform this command.");
+        sender.sendMessage(prefix + "You are missing the correct permission to perform this command.");
         return true;
     }
 }
