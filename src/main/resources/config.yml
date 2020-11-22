@@ -16,6 +16,11 @@ discord-role-id: "##################"
 # Default value: "builder"
 minecraft-role-name: "builder"
 
+# Whether role changes should just affect recently promoted/demoted users, or if it should update everyone else.
+# Sometimes this can be useful for cleaning up roles given by accident in the past, so this is enabled by default.
+# Default value: true
+global-role-changes: true
+
 # If you want each time a builder is promoted to be logged to the Minecraft Server Console, enable this.
 # Default value: false
 log-role-changes: false

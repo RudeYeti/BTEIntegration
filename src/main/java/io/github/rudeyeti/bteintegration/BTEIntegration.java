@@ -2,6 +2,7 @@ package io.github.rudeyeti.bteintegration;
 
 import github.scarsz.discordsrv.DiscordSRV;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Guild;
+import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.api.requests.GatewayIntent;
 import github.scarsz.discordsrv.util.DiscordUtil;
@@ -16,6 +17,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
@@ -25,11 +27,12 @@ public final class BTEIntegration extends JavaPlugin {
     public static Configuration configuration;
     public static Logger logger;
     public static String buildTeamMembers;
+    public static List<Member> buildTeamMembersList;
+    public static List<Member> initialBuildTeamMembersList;
     public static Guild guild;
     public static String roleID;
     public static Role role;
     public static String group;
-    public static String initialBuilders;
     public static int lastPage;
 
     public static Permission getPermissions() {

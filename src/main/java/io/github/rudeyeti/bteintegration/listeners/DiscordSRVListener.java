@@ -22,6 +22,7 @@ public class DiscordSRVListener {
         try {
             DiscordUtil.getJda().addEventListener(new JDAListener());
 
+            String initialBuilders;
             guild = DiscordSRV.getPlugin().getMainGuild();
 
             if (guild == null) {
@@ -48,6 +49,7 @@ public class DiscordSRVListener {
             Document membersFirstPage = Jsoup.connect(buildTeamMembers + "?page=1").userAgent("BTEIntegration").get();
             initialBuilders = membersFirstPage.select("small").text();
             lastPage = Integer.parseInt(membersFirstPage.select("div.pagination").select("a").last().text());
+            initialBuildTeamMembersList = SyncBuilders.getWebsiteMembersList();
             String builders;
 
             while (true) {
@@ -60,10 +62,11 @@ public class DiscordSRVListener {
                     continue;
                 }
 
+                SyncBuilders.sync();
+
+                initialBuildTeamMembersList = SyncBuilders.getWebsiteMembersList();
                 initialBuilders = builders;
                 lastPage = Integer.parseInt(membersFirstPage.select("div.pagination").select("a").last().text());
-
-                SyncBuilders.sync();
             }
         } catch (HttpStatusException ignored) {
         } catch (InterruptedException | IOException error) {
