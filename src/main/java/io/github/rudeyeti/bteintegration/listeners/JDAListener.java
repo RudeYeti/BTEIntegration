@@ -9,7 +9,8 @@ import static io.github.rudeyeti.bteintegration.BTEIntegration.globalRoleChanges
 import static io.github.rudeyeti.bteintegration.BTEIntegration.lastRoleChange;
 
 public class JDAListener extends ListenerAdapter {
-    public void guildMemberJoinEvent(@NotNull GuildMemberJoinEvent event) {
+    @Override
+    public void onGuildMemberJoin(@NotNull GuildMemberJoinEvent event) {
         if (globalRoleChanges) {
             SyncBuilders.syncAllUsers();
         } else {

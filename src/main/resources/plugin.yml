@@ -6,7 +6,6 @@ author: Rude Yeti, Incorporated
 load: POSTWORLD
 description: A simple plugin which allows synchronization from the BuildTheEarth Website to Discord and Minecraft Servers.
 commands:
-  bteintegrationreload:
-    description: Reloads the BTEIntegration plugin.
-    usage: /bteintegrationreload
-    permission: bteintegration.reload
+  bteintegration:
+    description: The main command of the BTEIntegration Plugin.
+    usage: /bteintegration <info | reload | stats>

@@ -6,7 +6,7 @@ import github.scarsz.discordsrv.dependencies.jda.api.entities.Member;
 import github.scarsz.discordsrv.dependencies.jda.api.entities.Role;
 import github.scarsz.discordsrv.dependencies.jda.api.requests.GatewayIntent;
 import github.scarsz.discordsrv.util.DiscordUtil;
-import io.github.rudeyeti.bteintegration.commands.BTEIntegrationReload;
+import io.github.rudeyeti.bteintegration.commands.BTEIntegrationCommand;
 import io.github.rudeyeti.bteintegration.listeners.DiscordSRVListener;
 import io.github.rudeyeti.bteintegration.listeners.EventListener;
 import io.github.rudeyeti.bteintegration.listeners.JDAListener;
@@ -23,7 +23,6 @@ import java.util.regex.Pattern;
 
 public final class BTEIntegration extends JavaPlugin {
 
-    public static String prefix = "[BTEIntegration] ";
     public static Plugin plugin;
     public static Configuration configuration;
     public static Logger logger;
@@ -71,7 +70,6 @@ public final class BTEIntegration extends JavaPlugin {
             logger.warning("The log-role-changes value in the configuration must be either true or false.");
             return false;
         }
-
         return true;
     }
 
@@ -82,7 +80,7 @@ public final class BTEIntegration extends JavaPlugin {
         }
 
         this.saveDefaultConfig();
-        this.getCommand("bteintegrationreload").setExecutor(new BTEIntegrationReload());
+        this.getCommand("bteintegration").setExecutor(new BTEIntegrationCommand());
         getServer().getPluginManager().registerEvents(new EventListener(), this);
         getPermissions();
         plugin = getPlugin(this.getClass());

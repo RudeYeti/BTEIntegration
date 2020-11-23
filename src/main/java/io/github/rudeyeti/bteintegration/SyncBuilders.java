@@ -32,9 +32,7 @@ public class SyncBuilders {
                     Member member = guild.getMemberByTag(username);
                     membersSize++;
 
-                    try {
-                        member.getId();
-                    } catch (NullPointerException error) {
+                    if (member == null) {
                         continue;
                     }
 

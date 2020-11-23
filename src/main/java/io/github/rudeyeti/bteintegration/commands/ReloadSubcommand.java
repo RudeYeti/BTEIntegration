@@ -1,15 +1,13 @@
 package io.github.rudeyeti.bteintegration.commands;
 
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.Configuration;
 
 import static io.github.rudeyeti.bteintegration.BTEIntegration.*;
 
-public class BTEIntegrationReload implements CommandExecutor {
-    @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+public class ReloadSubcommand {
+    public static void execute(CommandSender sender) {
         if (sender.hasPermission("bteintegration.reload") || sender.isOp()) {
             Configuration oldConfiguration = configuration;
             plugin.reloadConfig();
@@ -18,13 +16,12 @@ public class BTEIntegrationReload implements CommandExecutor {
             if (!validateConfiguration()) {
                 configuration = oldConfiguration;
                 updateConfiguration();
-                sender.sendMessage(prefix + "The configuration was invalid, reverting back to the previous state.");
+                sender.sendMessage("The configuration was invalid, reverting back to the previous state.");
             } else {
-                sender.sendMessage(prefix + "The plugin has been successfully reloaded.");
+                sender.sendMessage("The plugin has been successfully reloaded.");
             }
-            return true;
+            return;
         }
-        sender.sendMessage(prefix + "You are missing the correct permission to perform this command.");
-        return true;
+        sender.sendMessage(ChatColor.RED + "You are missing the correct permission to perform this command.");
     }
 }

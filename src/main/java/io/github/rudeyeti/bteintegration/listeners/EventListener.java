@@ -13,6 +13,11 @@ public class EventListener implements Listener {
     @EventHandler
     public void playerJoinEvent(PlayerJoinEvent event) {
         String userId = DiscordSRV.getPlugin().getAccountLinkManager().getDiscordId(event.getPlayer().getUniqueId());
+
+        if (userId == null) {
+            return;
+        }
+
         Member member = guild.getMemberById(userId);
         boolean hasRole = member.getRoles().contains(role);
         boolean inGroup = getPermissions().playerInGroup(event.getPlayer(), minecraftRoleName);
