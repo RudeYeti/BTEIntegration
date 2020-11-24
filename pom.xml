@@ -6,7 +6,7 @@
 
     <groupId>io.github.rudeyeti</groupId>
     <artifactId>bteintegration</artifactId>
-    <version>1.0.1</version>
+    <version>1.2</version>
     <packaging>jar</packaging>
 
     <name>BTEIntegration</name>
@@ -41,6 +41,7 @@
                         <configuration>
                             <createDependencyReducedPom>true</createDependencyReducedPom>
                             <minimizeJar>true</minimizeJar>
+                            <outputFile>${project.name}-${project.version}.jar</outputFile>
                         </configuration>
                     </execution>
                 </executions>

@@ -1,11 +1,10 @@
-name: BTEIntegration
+name: ${project.name}
 version: ${project.version}
-main: io.github.rudeyeti.bteintegration.BTEIntegration
+main: ${project.groupId}.${project.artifactId}.${project.name}
 depend: [DiscordSRV, Vault]
 author: Rude Yeti, Incorporated
 load: POSTWORLD
-description: A simple plugin which allows synchronization from the BuildTheEarth Website to Discord and Minecraft Servers.
+description: ${project.description}
 commands:
   bteintegration:
-    description: The main command of the BTEIntegration Plugin.
-    usage: /bteintegration <info | reload | stats>
+    description: bteintegration

@@ -17,17 +17,17 @@ public class BTEIntegrationCommand implements CommandExecutor, TabExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (args.length == 0) {
             sender.sendMessage("List of available subcommands:\n" +
-                               "info - Details about the author and version of the plugin.\n" +
+                               "info - Shows details about the author and the version of this plugin.\n" +
                                "reload - Updates any values that were modified in the configuration.\n" +
                                "stats - Lists different information regarding the members.");
-        } else if (args.length > 1) {
-            sender.sendMessage(ChatColor.RED + "Usage: /bteintegration <info | reload | stats>");
-        } else if (args[0].equals("info")) {
+        } else if (args[0].matches("i(nfo)?(rmation)?|authors?|ver(sion)?")) {
             InfoSubcommand.execute(sender);
-        } else if (args[0].equals("reload")) {
+        } else if (args[0].matches("r(e?(load|start|boot))?|(en|dis)able")) {
             ReloadSubcommand.execute(sender);
-        } else if (args[0].equals("stats")) {
+        } else if (args[0].matches("s(tat)?(istic)?s?")) {
             StatsSubcommand.execute(sender);
+        } else {
+            sender.sendMessage(ChatColor.RED + "Usage: /bteintegration <info | reload | stats>");
         }
         return true;
     }
